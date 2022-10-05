@@ -6,6 +6,7 @@ import {
   DeleteContact,
   ContactsListItem,
 } from './StyledComponents';
+import { getFilteredContacts } from '../../../helpers/getFilteredContacts';
 
 const ContactList = props => {
   const {
@@ -13,23 +14,15 @@ const ContactList = props => {
     contacts,
     setContacts,
   } = props;
-
-  const lowerCase = filter.toLowerCase();
-  const upperCase = filter.toUpperCase();
-  const filteredContacts = contacts.filter(contact => {
-    return Object.keys(contact).some(key =>
-      contact[key].toLowerCase().includes(lowerCase, upperCase)
-    );
-  });
-
+  const filteredContacts = getFilteredContacts(contacts, filter);
   const handleOnDelete = event => {
     setContacts(contacts.filter(contact => contact.id !== event))
-}
+  }
 
   return (
     <Wrapper>
       <ContactsList>
-        {!filter.length
+        {!filter
           ? contacts.map(contact => (
             <ContactsListItem key={contact.id}>
               {contact.name}: {contact.number}
@@ -53,9 +46,16 @@ const ContactList = props => {
 }
 
 ContactList.propTypes = {
+  id: PropTypes.string,
+  name: PropTypes.string,
+  item: PropTypes.object,
+  number: PropTypes.number,
   filter: PropTypes.string,
+  contact: PropTypes.object,
   contacts: PropTypes.array,
   setContacts: PropTypes.func,
+  filteredContacts: PropTypes.array,
+  getFilteredContacts: PropTypes.func,
 };
 
 export default ContactList;
